@@ -1,3 +1,11 @@
+use rand::{seq::SliceRandom, Rng, thread_rng};
+
+
+pub fn create_rando_arr(size: usize) -> Vec<usize> {
+    let mut vec: Vec<usize> = (0..size).collect();
+    vec.shuffle(& mut thread_rng());
+    vec
+}
 
 /// Non recursive, non functional like function.
 /// Returns the length of a particular tour for the tabel / map.
@@ -28,4 +36,20 @@ pub fn find_tour_rec(arr: &[usize], table: &[Vec<f64>], pos: usize) -> f64 {
 /// Returns false otherwise.
 pub fn is_better(arr1: &[usize], arr2: &[usize], table: &[Vec<f64>]) -> bool {
     find_tour_rec(arr1, table, 0) <= find_tour_rec(arr2, table, 0)
+}
+
+pub fn decision(prob: f64) -> bool {
+    thread_rng().gen::<f64>() < prob
+}
+
+#[test]
+fn decision_test() {
+    let mut count = 0;
+    for _ in 0..1000 {
+        if decision(0.5) {
+            count += 1;
+        }
+    }
+    assert!(count < 550);
+    assert!(count > 450);
 }

@@ -2,6 +2,7 @@ use rand::{seq::SliceRandom, Rng, thread_rng};
 use std::fs::File;
 use std::io::{self, BufRead, BufReader};
 use std::vec;
+use std::cmp::Ordering::{Equal, Less, Greater};
 
 mod toolkit;
 fn main() {
@@ -37,25 +38,36 @@ fn main() {
     let size:usize = 10;
 
     println!("Random number: {}", rng.gen_range(0..size));
+    // println!("Random number: {}", rng.gen_range(0..size));
 
-    let test = create_rando_arr(5);
-    let test2 = create_rando_arr(5);
 
-    println!("rando arr1: {:?}, len is: {}", test, toolkit::find_tour_rec(&test, &table, 0));
-    println!("rando arr2: {:?}, len is: {}", test2, toolkit::find_tour_rec(&test2, &table, 0));
+    let test1 = vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
-    if toolkit::is_better(&test, &test2, &table) {
-        println!("first test case is better");
-    } else {
-        println!("second test case is better");
+    let new1 = find_neighbor(&test1);
+
+    println!("old: {:?}", &test1);
+    println!("new: {:?}", new1);
+
+}
+
+fn find_neighbor(og_arr: &[usize]) -> Vec<usize>{
+    let mut rng = thread_rng();
+    let r1 = rng.gen_range(0..og_arr.len());
+    let r2 = rng.gen_range(0..og_arr.len());
+    let mut na = og_arr.to_owned();
+
+    match r1.cmp(&r2) {
+        Less => {
+            na[r1..=r2].shuffle(& mut rng);
+        },
+        Greater => {
+        na[..=r1].shuffle(& mut rng);
+        na[r2..].shuffle(& mut rng);
+        },
+        Equal => {
+            na.shuffle(& mut rng);
+        },
     }
-
-    // assert!(toolkit::is_better(&test, &test2, &table));
+    na
 }
 
-
-fn create_rando_arr(size: usize) -> Vec<usize> {
-    let mut vec: Vec<usize> = (0..size).collect();
-    vec.shuffle(& mut thread_rng());
-    vec
-}
