@@ -1,9 +1,8 @@
-use rand::{seq::SliceRandom, Rng, thread_rng};
-
+use rand::{seq::SliceRandom, thread_rng, Rng};
 
 pub fn create_rando_arr(size: usize) -> Vec<usize> {
     let mut vec: Vec<usize> = (0..size).collect();
-    vec.shuffle(& mut thread_rng());
+    vec.shuffle(&mut thread_rng());
     vec
 }
 
